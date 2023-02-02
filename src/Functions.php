@@ -19,8 +19,12 @@ if (!function_exists('collect')) {
 if (!function_exists('value')) {
     /**
      * Return the default value of the given value.
+     *
+     * @param mixed $value
+     *
+     * @return mixed
      */
-    function value(mixed $value): mixed
+    function value($value)
     {
         return $value instanceof Closure ? $value() : $value;
     }
@@ -29,15 +33,18 @@ if (!function_exists('value')) {
 if (!function_exists('data_get')) {
     /**
      * Get an item from an array or object using "dot" notation.
+     *
+     * @param array|int|string|null $key
+     * @param mixed|null            $default
+     * @param mixed                 $target
      */
-    function data_get(mixed $target, array|int|string|null $key, mixed $default = null): mixed
+    function data_get($target, $key, $default = null)
     {
         if (is_null($key)) {
             return $target;
         }
 
         $key = is_array($key) ? $key : explode('.', is_int($key) ? (string) $key : $key);
-
         while (!is_null($segment = array_shift($key))) {
             if ('*' === $segment) {
                 if ($target instanceof Collection) {

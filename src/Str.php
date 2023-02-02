@@ -27,6 +27,9 @@ class Str
      */
     protected static array $studlyCache = [];
 
+    /**
+     * Return the remainder of a string after a given value.
+     */
     public static function after(string $subject, string $search): string
     {
         return '' === $search ? $subject : array_reverse(explode($search, $subject, 2))[0];
@@ -50,11 +53,17 @@ class Str
         return preg_replace('/[^\x20-\x7E]/u', '', $value);
     }
 
+    /**
+     * Get the portion of a string before a given value.
+     */
     public static function before(string $subject, string $search): string
     {
         return '' === $search ? $subject : explode($search, $subject)[0];
     }
 
+    /**
+     * Convert a value to camel case.
+     */
     public static function camel(string $value): string
     {
         if (isset(static::$camelCache[$value])) {
@@ -64,10 +73,15 @@ class Str
         return static::$camelCache[$value] = lcfirst(static::studly($value));
     }
 
-    public static function contains(string $haystack, array|string $needles): bool
+    /**
+     * Determine if a given string contains a given substring.
+     *
+     * @param string|array $needles
+     */
+    public static function contains(string $haystack, $needles): bool
     {
         foreach ((array) $needles as $needle) {
-            if (str_contains($haystack, $needle)) {
+            if ('' !== $needle && false !== mb_strpos($haystack, $needle)) {
                 return true;
             }
         }
@@ -75,10 +89,15 @@ class Str
         return false;
     }
 
-    public static function endsWith(string $haystack, array|string $needles): bool
+    /**
+     * Determine if a given string ends with a given substring.
+     *
+     * @param string|array $needles
+     */
+    public static function endsWith(string $haystack, $needles): bool
     {
         foreach ((array) $needles as $needle) {
-            if (str_ends_with($haystack, $needle)) {
+            if (substr($haystack, -strlen($needle)) === (string) $needle) {
                 return true;
             }
         }
@@ -96,7 +115,12 @@ class Str
         return preg_replace('/(?:'.$quoted.')+$/u', '', $value).$cap;
     }
 
-    public static function is(array|string $pattern, string $value): bool
+    /**
+     * Determine if a given string matches a given pattern.
+     *
+     * @param string|array $pattern
+     */
+    public static function is($pattern, string $value): bool
     {
         $patterns = Arr::wrap($pattern);
 
@@ -181,12 +205,17 @@ class Str
         return rtrim($matches[0]).$end;
     }
 
+    /**
+     * Parse a Class.
+     */
     public static function parseCallback(string $callback, ?string $default = null): array
     {
         return static::contains($callback, '@') ? explode('@', $callback, 2) : [$callback, $default];
     }
 
     /**
+     * Generate a more truly "random" alpha-numeric string.
+     *
      * @throws Exception
      */
     public static function random(int $length = 16): string
@@ -207,23 +236,24 @@ class Str
     public static function uuidV4(): string
     {
         return sprintf('%04x%04x-%04x-%04x-%04x-%04x%04x%04x',
+
             // 32 bits for "time_low"
-            mt_rand(0, 0xFFFF), mt_rand(0, 0xFFFF),
+            mt_rand(0, 0xffff), mt_rand(0, 0xffff),
 
             // 16 bits for "time_mid"
-            mt_rand(0, 0xFFFF),
+            mt_rand(0, 0xffff),
 
             // 16 bits for "time_hi_and_version",
             // four most significant bits holds version number 4
-            mt_rand(0, 0x0FFF) | 0x4000,
+            mt_rand(0, 0x0fff) | 0x4000,
 
             // 16 bits, 8 bits for "clk_seq_hi_res",
             // 8 bits for "clk_seq_low",
             // two most significant bits holds zero and one for variant DCE1.1
-            mt_rand(0, 0x3FFF) | 0x8000,
+            mt_rand(0, 0x3fff) | 0x8000,
 
             // 48 bits for "node"
-            mt_rand(0, 0xFFFF), mt_rand(0, 0xFFFF), mt_rand(0, 0xFFFF)
+            mt_rand(0, 0xffff), mt_rand(0, 0xffff), mt_rand(0, 0xffff)
         );
     }
 
@@ -341,10 +371,15 @@ class Str
         return static::$snakeCache[$key][$delimiter] = $value;
     }
 
-    public static function startsWith(string $haystack, array|string $needles): bool
+    /**
+     * Determine if a given string starts with a given substring.
+     *
+     * @param string|array $needles
+     */
+    public static function startsWith(string $haystack, $needles): bool
     {
         foreach ((array) $needles as $needle) {
-            if (str_starts_with($haystack, $needle)) {
+            if ('' !== $needle && substr($haystack, 0, strlen($needle)) === (string) $needle) {
                 return true;
             }
         }

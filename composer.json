@@ -1,5 +1,5 @@
 {
-    "name": "yansongda/supports",
+    "name": "lavamusic/yansongda-supports",
     "description": "common components",
     "keywords": ["support", "array", "collection", "config"],
     "support": {
@@ -13,13 +13,15 @@
         }
     ],
     "require": {
-        "php": ">=8.0"
+        "php": ">=7.3"
     },
     "require-dev": {
         "phpunit/phpunit": "^9.0",
         "mockery/mockery": "^1.4",
         "friendsofphp/php-cs-fixer": "^3.0",
-        "phpstan/phpstan": "^1.1.0"
+        "phpstan/phpstan": "^1.1.0",
+        "symfony/console": "^5.1",
+        "monolog/monolog": "^2.0"
     },
     "autoload": {
         "files": [
